@@ -2,12 +2,12 @@ package fr.intact.agencyrobot;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         serialService = new SerialService(this);
-        mqttListenerService = new MqttListenerService(this.getApplicationContext());
+        mqttListenerService = new MqttListenerService(this.getApplicationContext(), serialService);
 
         ButterKnife.bind(this);
     }
@@ -59,70 +59,32 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.left_arrow) void leftArrowClicked()  {
         Toast.makeText(getApplicationContext(), R.string.app_name, Toast.LENGTH_LONG).show();
-        try {
-            serialService.write("L");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        serialService.turnLeft();
     }
 
     @OnClick(R.id.top_arrow) void topArrowClicked()  {
         Toast.makeText(getApplicationContext(), R.string.app_name, Toast.LENGTH_LONG).show();
-        try {
-            serialService.write("F");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        serialService.forward();
     }
 
     @OnClick(R.id.right_arrow) void rightArrowClicked()  {
         Toast.makeText(getApplicationContext(), R.string.app_name, Toast.LENGTH_LONG).show();
-        try {
-            serialService.write("R");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        serialService.turnRight();
     }
 
     @OnClick(R.id.bottom_arrow) void bottomArrowClicked()  {
         Toast.makeText(getApplicationContext(), R.string.app_name, Toast.LENGTH_LONG).show();
-        try {
-            serialService.write("B");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        serialService.backward();
     }
 
     @OnClick(R.id.stop_arrow) void stopClicked()  {
         Toast.makeText(getApplicationContext(), R.string.app_name, Toast.LENGTH_LONG).show();
-        try {
-            serialService.write("S");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        serialService.stop();
     }
 
     @OnClick(R.id.connect_mqtt) void connectMqtt()  {
         try {
-            IMqttToken iMqttToken = mqttListenerService.connect();
-            iMqttToken.setActionCallback(new IMqttActionListener(){
-
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    System.out.println("Mqtt connect success");
-                    try {
-                        mqttListenerService.subscribe();
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    System.out.println("Mqtt connect failure");
-                    exception.printStackTrace();
-                }
-            });
+            mqttListenerService.connectAndListen();
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -134,5 +96,10 @@ public class MainActivity extends AppCompatActivity {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    @OnClick(R.id.open_chat_button) void openChatActivity()  {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://meet.jit.si/agency-robot-paris"),this, ChatActivity.class);
+        startActivity(intent);
     }
 }

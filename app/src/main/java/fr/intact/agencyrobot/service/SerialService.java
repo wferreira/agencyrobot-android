@@ -13,10 +13,15 @@ import com.hoho.android.usbserial.driver.UsbSerialProber;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fr.intact.agencyrobot.BuildConfig;
 
 public class SerialService {
+
+
+    private static final Logger  LOGGER = Logger.getLogger(SerialService.class.getName());
 
     static final String INTENT_ACTION_GRANT_USB = BuildConfig.APPLICATION_ID + ".GRANT_USB";
     private static final int WRITE_WAIT_MILLIS = 2000;
@@ -55,11 +60,52 @@ public class SerialService {
         return true;
     }
 
-    public void write(String command) throws IOException {
+    private void write(String command) throws IOException {
         port.write(command.getBytes(), WRITE_WAIT_MILLIS);
     }
 
     public void disconnect() throws IOException {
         port.close();
     }
+
+    public void forward(){
+        try {
+            this.write("F");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public void backward(){
+        try {
+            this.write("B");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public void turnLeft(){
+        try {
+            this.write("L");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public void turnRight(){
+        try {
+            this.write("R");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+    public void stop(){
+        try {
+            this.write("S");
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
 }

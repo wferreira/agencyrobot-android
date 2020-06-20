@@ -56,43 +56,52 @@
 
 
     <Button
+        android:id="@+id/top_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forward"
+        app:layout_constraintLeft_toRightOf="@id/left_arrow"
+        app:layout_constraintTop_toBottomOf="@id/connect_mqtt" />
+
+    <Button
         android:id="@+id/left_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Left"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/connect_mqtt" />
-
-    <Button
-        android:id="@+id/top_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Forward"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/left_arrow" />
-
-    <Button
-        android:id="@+id/right_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Right"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_arrow" />
-
-    <Button
-        android:id="@+id/bottom_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Backward"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/right_arrow" />
+        app:layout_constraintTop_toBottomOf="@id/top_arrow" />
 
     <Button
         android:id="@+id/stop_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stop"
+        app:layout_constraintLeft_toRightOf="@id/left_arrow"
+        app:layout_constraintTop_toBottomOf="@+id/top_arrow" />
+
+    <Button
+        android:id="@+id/right_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Right"
+        app:layout_constraintLeft_toRightOf="@id/stop_arrow"
+        app:layout_constraintTop_toBottomOf="@+id/top_arrow" />
+
+
+    <Button
+        android:id="@+id/bottom_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Backward"
+        app:layout_constraintLeft_toRightOf="@id/left_arrow"
+        app:layout_constraintTop_toBottomOf="@+id/right_arrow" />
+
+    <Button
+        android:id="@+id/open_chat_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open chat activity"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bottom_arrow" />
+        app:layout_constraintTop_toBottomOf="@id/bottom_arrow" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

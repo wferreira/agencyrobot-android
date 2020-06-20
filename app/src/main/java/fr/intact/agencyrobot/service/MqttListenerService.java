@@ -18,17 +18,40 @@ public class MqttListenerService {
 
     private MqttAndroidClient client;
 
-    public MqttListenerService(Context applicationContext){
+    private SerialService serialService;
+
+    public MqttListenerService(Context applicationContext, SerialService serialService){
+        this.serialService = serialService;
         String clientId = MqttClient.generateClientId();
         client = new MqttAndroidClient(applicationContext, CLOUDMQTT_URL, clientId);
     }
 
-    public IMqttToken connect() throws MqttException {
+    public void connectAndListen() throws MqttException {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(CLOUDMQTT_USER);
         options.setPassword(CLOUDMQTT_PWD.toCharArray());
 
-        return client.connect(options);
+        MqttListenerService self = this;
+
+        client.connect(options).setActionCallback(new IMqttActionListener(){
+
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                System.out.println("Mqtt connect success");
+                try {
+                    //asyncActionToken.getClient().su
+                    self.subscribe();
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                System.out.println("Mqtt connect failure");
+                exception.printStackTrace();
+            }
+        });
     }
 
     public void disconnect() throws MqttException {
@@ -46,6 +69,26 @@ public class MqttListenerService {
     }
 
     public void subscribe() throws MqttException {
-        IMqttToken subToken = client.subscribe(CLOUDMQTT_TOPIC, 1, (topic, message) -> System.out.println("MESSAGE RECEIVED : "+message.toString()));
+        client.subscribe(CLOUDMQTT_TOPIC, 1, (topic, message) -> {
+            System.out.println("MESSAGE RECEIVED : "+message.toString());
+            switch (message.toString()){
+                case "F":
+                    serialService.forward();
+                    break;
+                case "B":
+                    serialService.backward();
+                    break;
+                case "L":
+                    serialService.turnLeft();
+                    break;
+                case "R":
+                    serialService.turnRight();
+                    break;
+                case "S":
+                    serialService.stop();
+                    break;
+            }
+
+        });
     }
 }
